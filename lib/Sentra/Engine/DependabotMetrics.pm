@@ -4,6 +4,11 @@ package Sentra::Engine::DependabotMetrics {
     use JSON;
     use Sentra::Utils::UserAgent;
     use Sentra::Utils::Repositories_List;
+    use Readonly;
+    
+    our $VERSION = '0.0.1';
+
+    Readonly my $HTTP_OK => 200;
 
     sub new {
         my ($class, $org, $token, $per_page) = @_;
@@ -11,7 +16,7 @@ package Sentra::Engine::DependabotMetrics {
         my $userAgent = Sentra::Utils::UserAgent -> new($token);
         my @repositories_list = Sentra::Utils::Repositories_List -> new($org, $token);
         
-        my $output         = "";
+        my $output            = q{};
         my $total_alerts   = 0;
         my %severity_count = (
             low      => 0, 
@@ -25,22 +30,29 @@ package Sentra::Engine::DependabotMetrics {
             my $alert_url  = "https://api.github.com/repos/$repository/dependabot/alerts?state=open&per_page=$per_page&page=$alert_page";
             my $request    = $userAgent -> get($alert_url);
                 
-            if ($request -> code() == 200) {
+            if ($request -> code() == $HTTP_OK) {
                 my $alert_data = decode_json($request -> content());
                 
-                last unless @$alert_data;
+                if (scalar(@{$alert_data}) == 0) {
+                    last;
+                }
+
+                $total_alerts += scalar(@{$alert_data});
+                
+                foreach my $alert (@{$alert_data}) {
+                    my $severity = $alert->{security_vulnerability}{severity} || 'unknown';
                     
-                $total_alerts += scalar @$alert_data;
-                    
-                for my $alert (@$alert_data) {
-                    my $severity = $alert -> {security_vulnerability}{severity} || 'unknown';
-                    
-                    $severity_count{$severity}++ if exists $severity_count{$severity};
-                }               
+                    if (exists $severity_count{$severity}) {
+                        $severity_count{$severity}++;
+                    }
+                }
             }
         }
         
-        $output .= "Severity $_: $severity_count{$_}\n" for keys %severity_count;
+        foreach my $sev (keys %severity_count) {
+            $output .= "Severity $sev: $severity_count{$sev}\n";
+        }
+        
         $output .= "Total DependaBot Alerts: $total_alerts\n";
 
         return $output;

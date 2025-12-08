@@ -1,10 +1,12 @@
 package Sentra::Utils::Helper {
     use strict;
     use warnings;
+    
+    our $VERSION = '0.0.1';
 
     sub new {
         return join("\n",
-            "Sentra v0.0.3",
+            "Sentra v0.0.1",
             "Core Commands",
             "    ==============",
             "        Command                         Description",
@@ -15,8 +17,7 @@ package Sentra::Utils::Helper {
             "        -d, --dependency                Check if repositories has dependabot.yaml file",
             "        -M, --metrics                   See some metrics based on GHAS",
             "        -w, --webhook                   Set the webhook address for Slack",
-            "        -m, --message                   Message to send via Slack webhook",
-            ""
+            "        -m, --message                   Message to send via Slack webhook"
         );
     }
 }
