@@ -1,7 +1,7 @@
 package Sentra::Utils::Helper {
     use strict;
     use warnings;
-    
+
     our $VERSION = '0.0.1';
 
     sub new {
@@ -16,6 +16,8 @@ package Sentra::Utils::Helper {
             "        -mt, --maintained               Get alerts about repositories with a last commit date greater than 90 days old",
             "        -d, --dependency                Check if repositories has dependabot.yaml file",
             "        -M, --metrics                   See some metrics based on GHAS",
+            "        -ss, --secret-scanning          Check repositories for secret scanning tools",
+            "        --sast                          Check repositories for SAST tools",
             "        -w, --webhook                   Set the webhook address for Slack",
             "        -m, --message                   Message to send via Slack webhook"
         );
