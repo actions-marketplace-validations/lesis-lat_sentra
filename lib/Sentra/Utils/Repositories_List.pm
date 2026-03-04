@@ -17,13 +17,16 @@ package Sentra::Utils::Repositories_List {
         my $user_agent = Sentra::Utils::UserAgent -> new($token);
 
         while (1) {
-            my $url      = "https://api.github.com/orgs/$org/repos?per_page=100&page=$page";
+            my $url = "https://api.github.com/orgs/$org/repos?per_page=100"
+                . "&page=$page";
             my $response = $user_agent -> get($url);
 
             if ($response -> code() == $HTTP_OK) {
                 my $data  = decode_json($response -> content());
 
-                last if scalar(@{$data}) == 0;
+                if (scalar(@{$data}) == 0) {
+                    last;
+                }
 
                 foreach my $repository (@{$data}) {
                     if (!$repository -> {archived}) {
