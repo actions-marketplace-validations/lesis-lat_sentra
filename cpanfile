@@ -1,12 +1,13 @@
 requires "Getopt::Long",                "2.58";
-requires "Mojo::UserAgent", "9.42";
-requires "LWP::UserAgent", "6.81";
-requires "JSON",                        "4.10";
-requires "DateTime::Format::ISO8601",   "0.17";
+requires "Mojolicious", "9.49";
+requires "LWP::UserAgent", "6.83";
+requires "JSON", "4.11";
+requires "DateTime::Format::ISO8601", "0.19";
 requires "DateTime",                    "1.66";
+requires "Readonly", "2.05";
+requires "LWP::Protocol::https", "6.17";
 
 on 'test' => sub {
-requires "Test::More", "1.302219";
-requires "Test::MockModule",            "0.180.0";
-    requires "Mojo::Transaction::HTTP", "9.42";
+    requires "Test::More", "1.302222";
+    requires "Test::MockModule", "v0.185.3";
 };
